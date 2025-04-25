@@ -9,28 +9,23 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                // If using Jenkins with Git, clone is automatic if configured properly
                 echo "Repository cloned automatically by Jenkins job"
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build(dairy_classifier_app-streamlit-app)
-                }
+                sh 'docker build -t ${IMAGE_NAME} .'
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                script {
-                    sh "docker rm -f ${dairy-classifier} || true"
-                    sh """
-                        docker run -d --name ${dairy-classifier} \\
-                        -p 8501:8501 ${dairy_classifier_app-streamlit-app:latest}
-                    """
-                }
+                // Stop and remove existing container if it's running
+                sh """
+                    docker rm -f ${CONTAINER_NAME} || true
+                    docker run -d --name ${CONTAINER_NAME} -p 8501:8501 ${IMAGE_NAME}
+                """
             }
         }
     }
@@ -43,7 +38,7 @@ pipeline {
             echo 'Pipeline failed.'
         }
         success {
-            echo 'Dairy Classifier app is up and running at http://localhost:8501'
+            echo 'Dairy Classifier app is running at http://localhost:8501'
         }
     }
 }
