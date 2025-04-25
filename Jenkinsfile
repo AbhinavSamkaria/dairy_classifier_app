@@ -15,16 +15,15 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t ${IMAGE_NAME} .'
+                bat "docker build -t %IMAGE_NAME% ."
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                // Stop and remove existing container if it's running
-                sh """
-                    docker rm -f ${CONTAINER_NAME} || true
-                    docker run -d --name ${CONTAINER_NAME} -p 8501:8501 ${IMAGE_NAME}
+                bat """
+                    docker rm -f %CONTAINER_NAME%
+                    docker run -d --name %CONTAINER_NAME% -p 8501:8501 %IMAGE_NAME%
                 """
             }
         }
@@ -38,7 +37,7 @@ pipeline {
             echo 'Pipeline failed.'
         }
         success {
-            echo 'Dairy Classifier app is running at http://localhost:8501'
+            echo 'Dairy Classifier app should be running at http://localhost:8501'
         }
     }
 }
