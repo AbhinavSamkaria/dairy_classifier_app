@@ -17,7 +17,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build(IMAGE_NAME)
+                    docker.build(dairy_classifier_app-streamlit-app)
                 }
             }
         }
@@ -25,10 +25,10 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    sh "docker rm -f ${CONTAINER_NAME} || true"
+                    sh "docker rm -f ${dairy-classifier} || true"
                     sh """
-                        docker run -d --name ${CONTAINER_NAME} \\
-                        -p 8501:8501 ${IMAGE_NAME}
+                        docker run -d --name ${dairy-classifier} \\
+                        -p 8501:8501 ${dairy_classifier_app-streamlit-app:latest}
                     """
                 }
             }
