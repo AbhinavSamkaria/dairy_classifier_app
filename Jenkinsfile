@@ -23,7 +23,7 @@ pipeline {
             steps {
                 bat """
                     docker rm -f %CONTAINER_NAME%
-                    docker run -d --name %CONTAINER_NAME% -p 8501:8501 %IMAGE_NAME%
+                    docker run -d --name %CONTAINER_NAME% -p 8601:8601 %IMAGE_NAME%
                 """
             }
         }
